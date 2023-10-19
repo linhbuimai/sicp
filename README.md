@@ -1,2 +1,3 @@
-# sicp
-SICP and 30s something
+# SICP Learning Path
+
+"The structure and interpretation of computer programs"
