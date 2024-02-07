@@ -66,3 +66,19 @@
 ; write a function that access if a sentence have number?
 (define (any-numbers? sent)
   (not (empty? (keep number? sent))))
+
+;; ----- Exercises -----
+; 8.4
+(define (vowels? letter)
+  (member? letter 'aeiou))
+
+(define (choose-beatles func)
+  (accumulate sentence (keep func '(john paul george ringo))))
+
+(define (ends-vowel? wd) (vowels? (last wd)))
+(define (even-count? wd) (even? (count wd)))
+
+(choose-beatles ends-vowel?)
+(choose-beatles even-count?)
+
+; 8.5
