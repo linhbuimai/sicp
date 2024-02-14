@@ -82,3 +82,106 @@
 (choose-beatles even-count?)
 
 ; 8.5
+(define (transform-beatles func)
+  (every func '(john paul george ringo)))
+
+(define (amazify name)
+  (word 'the-amazing- name))
+
+(transform-beatles amazify)
+(transform-beatles butfirst)
+
+; 8.6
+
+(define (map-single-letter letter)
+  (cond ((equal? letter 'a) 'alpha)
+        ((equal? letter 'b) 'bravo)
+        ((equal? letter 'c) 'credit)
+        ((equal? letter 'd) 'direct)
+        ((equal? letter 'e) 'elector)
+        ((equal? letter 'f) 'foster)
+        (else 'not-defined-yet)))
+
+(define (words wds)
+  (every map-single-letter wds))
+
+; 8.7
+(define (always-one arg)
+  1)
+
+(define (count sent)
+  (accumulate + (every always-one sent)))
+
+(define (letter-count sent)
+  (accumulate + (every count sent)))
+
+; 8.8
+(define (helper-exagg wd)
+  (cond ((number? wd) (* 2 wd))
+        ((equal? wd 'good) 'great)
+        ((equal? wd 'bad) 'terrible)
+        (else wd)))
+
+(define (exaggerate sent)
+  (every helper-exagg sent))
+
+; 8.9
+; Use word as the first argument to every
+; Use words? as the first argument to keep
+; Use sentence as the first argument to accumulate
+
+; 8.10
+(define (true-for-all? func sent)
+  (let ((filter-sent (keep func sent)))
+    (if (equal? sent filter-sent) #t #f)))
+
+; 8.11
+(define (base-grade grade)
+  (cond ((equal? grade 'A) 4)
+        ((equal? grade 'B) 3)
+        ((equal? grade 'C) 2)
+        ((equal? grade 'D) 1)
+        ((equal? grade 'F) 0)
+        (else 0)))
+
+(define (grade-modifier grade)
+  (cond ((equal? (last grade) '+) (+ (base-grade (first grade)) 0.33))
+        ((equal? (last grade) '-) (- (base-grade (first grade)) 0.33))
+        (else (base-grade (first grade)))))
+
+
+(define (count-sent sent)
+  (accumulate + (every always-one sent)))
+
+(define (gpa sent)
+  (/ (accumulate + (every grade-modifier sent))
+     (count-sent sent)))
+
+
+; 8.12
+(define (um? wd)
+  (equal? wd 'um))
+
+(define (count-ums sent)
+  (let ((filter-sent (keep um? sent)))
+    (count filter-sent)))
+
+; 8.13
+(define (number-for-letter l)
+  (cond ((member? l 'abc) 2)
+        ((member? l 'def) 3)
+        ((member? l 'ghi) 4)
+        ((member? l 'jkl) 5)
+        ((member? l 'mno) 6)
+        ((member? l 'pqrs) 7)
+        ((member? l 'tuv) 8)
+        ((member? l 'wxyz) 9)
+        (else 0)))
+
+(define (phone-unspell wd)
+  (accumulate word (every number-for-letter wd)))
+
+; 8.14
+; get the nth item in the sent, sent could be a sentence or a word
+(define (item n sent)
+  (first ((repeated bf (- n 1)) sent)))
