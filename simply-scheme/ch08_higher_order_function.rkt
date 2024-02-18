@@ -185,3 +185,7 @@
 ; get the nth item in the sent, sent could be a sentence or a word
 (define (item n sent)
   (first ((repeated bf (- n 1)) sent)))
+
+(define (subword wd startp endp)
+  (let ((wd-len (count wd)))
+    ((repeated bl (- wd-len endp)) ((repeated bf (- startp 1)) wd))))
