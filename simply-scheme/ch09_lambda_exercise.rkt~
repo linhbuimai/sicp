@@ -1,0 +1,10 @@
+(require (planet dyoo/simply-scheme:1:2/simply-scheme))
+
+;; Chapter 09 exercises
+
+; 9.4
+(define (who sent)
+  (every
+   (lambda (person)
+     (se person sent))
+   '(pete roger john keith)))
