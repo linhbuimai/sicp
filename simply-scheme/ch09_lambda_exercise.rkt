@@ -38,3 +38,20 @@
 
 ;; 9.8
 
+(define (hang-letter letter guesses)
+  (if (member? letter guesses)
+      letter
+      '_))
+
+(define (hang wd letters)
+  (every (lambda (letter) (hang-letter letter letters)) wd))
+
+;; 9.9
+(define (check-wd? wd sent)
+  (if (member? wd sent)
+      #t
+      #f))
+(define (common-words sent1 sent2)
+  (keep (lambda (wd) (check-wd? wd sent1)) sent2))
+
+;; 9.10
