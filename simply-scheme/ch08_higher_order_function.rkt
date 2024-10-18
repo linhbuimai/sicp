@@ -1,6 +1,5 @@
 (require (planet dyoo/simply-scheme:1:2/simply-scheme))
 
-
 ; Example of functions as data
 
 (define (make-conjugator prefix ending)
@@ -186,6 +185,10 @@
 (define (item n sent)
   (first ((repeated bf (- n 1)) sent)))
 
-(define (subword wd startp endp)
-  (let ((wd-len (count wd)))
-    ((repeated bl (- wd-len endp)) ((repeated bf (- startp 1)) wd))))
+; get the letters between from-to position of a word
+(define (subword wd from to)
+  (let ; like a sub-proc
+    ( (wd_len (count wd)) )
+    ( (repeated bl (- wd_len to)) ((repeated bf (- from 1)) wd) )
+  )
+)
