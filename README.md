@@ -6,11 +6,20 @@
 
 > in the Simply Scheme book
 
+`(require (planet dyoo/simply-scheme:1:2/simply-scheme))`
+
 ```scheme
 word
-keep
-accumulate
-every
+
+every      ; map
+keep       ; filter
+accumulate ; reduce
+repeated
+
+; condition
+cond
+if
+
 first
 butfirst (remove first character/item) (bf)
 butlast (bl)
@@ -29,5 +38,5 @@ odd?
 equal?
 member?
 before?
-empty>
+empty?
 ```

@@ -39,3 +39,13 @@ Use lambda to write function that returns funtion
 (define (same-arg-twice fn) (lambda (arg) (fn arg arg)))
 
 (define (flip fn) (lambda (a b) (fn b a)))
+
+; example of using let
+(define (roots a b c)
+  (let 
+    ; local variable declaration
+    ( (discriminant (sqrt (- (* b b) (* 4 a c)))) )
+    (se (/ (+ (- b) discriminant) (* 2 a))
+        (/ (- (- b) discriminant) (* 2 a)))
+  )
+)
