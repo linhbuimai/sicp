@@ -107,3 +107,25 @@
 (define safe-sqrt (type-check sqrt number?))
 
 ;; 9.16
+
+(define (count sent)
+  (accumulate + (every (lambda (arg) 1) sent)))
+
+(define (aplize func)
+  (lambda (x) (if (sentence? x) (every func x) (func x)))
+)
+; test
+(define apl-sqrt (aplize sqrt))
+(apl-sqrt 36)
+; > 6
+(apl-sqrt '(1 100 25 16)) 
+; > (1 10 5 4)
+
+;; 9.17 Write keep in terms of `every` and `accumulate` 
+
+(define (keep-manual pred? sent)
+  (accumulate se (every (lambda (x) (if (pred? x) x '())) sent))
+)
+
+(keep-manual number? '(34 23 hihi 21 91))
+(keep-manual (lambda (x) (> x 10)) '(1 2 3 5 24 28))
