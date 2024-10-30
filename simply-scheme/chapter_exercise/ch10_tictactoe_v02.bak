@@ -1,17 +1,6 @@
 (require (planet dyoo/simply-scheme:1:2/simply-scheme))
 
-"""
-(1) Representation of the board:
-'--------- ('123456789) which might be replaced by x and o during game playing
-'--o-xox-x
-
-(2) Combination of possible wins:
-'(123 456 789 147 258 369 159 357)
-
-Our tasks is to map the representation of the board to to combination of possible wins
-so that we know which step should take.
-"""
-
+;; -- find-triples
 (define (substitute-letter square position)
   (if (equal? '_ (item square position)) square (item square position))
 )
@@ -25,20 +14,12 @@ so that we know which step should take.
   )
 )
 
-;; replace the number triple with x/o
-; '__x_ox_o_ -> '("12x" "4ox" "7o9" 147 "2oo" xx9 "1o9" xo7)
 (define (find-triples position)
   (every (lambda (comb) (substitute-triple comb position))
     '(123 456 789 147 258 369 159 357))
 )
 
-"""
-Strategy: For each move, check if the computer can win on this move:
-
-+ The computer wins if it owns a triple with its letter appears twice and the opponent's letter
-does not appear. (to exclude the situation: xxo)
-"""
-
+;; -- check i-can-win?
 (define (opponent letter) (if (equal? letter 'x) 'o 'x))
 
 ;; procs to check if a triple is the possible winner?
@@ -58,26 +39,10 @@ does not appear. (to exclude the situation: xxo)
   )
 )
 
-"""
-Strategy: For each move, if the computer can't win but the opponent can 
-then block the winning triple of the opponent
-"""
+;; -- check opponent-can-win?
 (define (opponent-can-win? triples me) (i-can-win? tripples (opponent me)))
 
-"""
-Strategy: If either player can win on the next move, find the situation in which 
-a next move would lead to two winning triples next time.
-
-+ To find two triples whose one square is taken by the computer, one free square
-shared between the two triples
-
---> situation name:     folk
---> common square name: pivot
-
-Test case: '(xo3 4x6 78o x47 ox8 36o xxo 3x7)
-"""
-
-; to check in a triple have only computer's letter
+;; -- check i-can-fork?
 (define (my-single? triple me)
   (and (= (appearances me triple) 1)
     (= (appearances (opponent me) triple) 0))
@@ -92,31 +57,23 @@ Test case: '(xo3 4x6 78o x47 ox8 36o xxo 3x7)
     '(1 2 3 4 5 6 7 8 9))
 )
 
-; receives a sentence of triple satisfy my-single?, return a sentence of number that appears in more than one triple
 (define (repeated-numbers sent)
   (every first
     (keep (lambda (wd) (>= (count wd) 2)) (sort-digits (accumulate word sent)))
   )
 )
 
-;; write procs returns all the pivots in the triples
 (define (pivots triples me)
   (repeated-numbers (keep (lambda (triple) (my-single? triple me)) triples))
 )
 
-;; get the first number square that give rise to a folk situation
 (define (first-if-any sent) (if (empty? sent) #f (first sent)))
 
 (define (i-can-fork? triples me)
   (first-if-any (pivots triples me))
 )
 
-"""
-Strategy: Blocking the creation of a fork by the opponent
-
-How: Offensive strategy --> get two rows on this move to force the opponent block instead of making a fork
-"""
-;; look at the board position from the opponent's point of view to look for forks
+;; -- check i-can-advance?
 (define (best-square-helper opponent-pivots pair)
   (if (member? (first pair) opponent-pivots)
     (first pair) (last pair))
@@ -136,11 +93,7 @@ How: Offensive strategy --> get two rows on this move to force the opponent bloc
     triples me)
 )
 
-"""
-Strategy: Leftovers
-
-Just pick a square if all else fails in the priority order: center > corner > edge
-"""
+;; -- decide leftover
 (define (first-choice posibilities preferences)
   (first (keep (lambda (square) (member? square posibilities)) preferences))
 )
@@ -149,10 +102,7 @@ Just pick a square if all else fails in the priority order: center > corner > ed
   (first-choice (accumulate word triples) '(5 1 3 7 9 2 4 6 8))
 )
 
-"""
-The final ttt-choose for each move given the current triples
-(triples got from current position)
-"""
+;; -- final combination of the program
 (define (ttt-choose triples me)
   (cond 
     ((i-can-win? triples me))
@@ -166,3 +116,6 @@ The final ttt-choose for each move given the current triples
 (define (ttt position me)
   (ttt-choose (find-triples position) me)
 )
+
+;; ---------- Do the Exercises ---------- ;;
+
