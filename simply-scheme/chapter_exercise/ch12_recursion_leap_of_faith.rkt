@@ -127,8 +127,67 @@
   )
 )
 
-(1000 100 50 10 1 1)       --> 1162
-(1000 100 1000 50 10 1 1)  --> (1000 -100 1000 50 1 1)
+(define (map-roman-value wd)
+  (if (empty? wd) '()
+    (se (roman-value (first wd)) (map-roman-value (bf wd)))
+  )
+)
 
+
+(define (arabic-helper sent)
+  (cond
+    ((empty? sent) '())
+    ((= (count sent) 1) (first sent))
+    (else 
+      (+ (if (< (first sent) (first (bf sent))) (- 0 (first sent)) (first sent))
+        (arabic-helper (bf sent))
+      ))
+))
+
+(define (arabic wd)
+  (arabic-helper (map-roman-value wd))
+)
 
 ; 12.13
+
+; -- function to get the remain: `remainder`
+; -- function to get the quotient: `quotient`
+
+(define seconds 60) ; = 1 minute
+(define minutes 60) ; = 1 hour
+(define hours 24)   ; = 1 day
+(define days 7)     ; = 1 week
+(define weeks 52)   ; = 1 year
+(define years 100)  ; = 1 century
+
+(define testcase1 22222)
+(define testcase2 4967189641)
+
+(define
+  time-mapping '(60 60 24 7 52 100)
+)
+
+(define
+  time-display-mapping '(centuries years weeks days hours minutes seconds)
+)
+
+(define (time-divide num time-mapping)
+  (if 
+    (= (count time-mapping) 1)
+    (se (remainder num (first time-mapping)) (quotient num (first time-mapping)) )
+    (se 
+      (remainder num (first time-mapping))
+      (time-divide (quotient num (first time-mapping)) (bf time-mapping))
+    )
+  )
+)
+
+(define (mapping-division time-sent time-text)
+  (if
+    (= (count time-text) 1)
+    (se (first time-sent) (first time-text))
+    (se (first time-sent) (first time-text) (mapping-division (bf time-sent) (bf time-text)))
+  )
+)
+
+; TODO: Handle the 0 number
