@@ -162,13 +162,25 @@
 
 (define testcase1 22222)
 (define testcase2 4967189641)
+(define testcase3 8967189641)
 
 (define
   time-mapping '(60 60 24 7 52 100)
 )
 
 (define
-  time-display-mapping '(centuries years weeks days hours minutes seconds)
+  time-display-mapping '(century year week day hour minute second)
+)
+
+(define (add-plural num text)
+  (if 
+    (<= num 1)  text
+    (if 
+      (equal? text 'century)
+      'centuries
+      (word text 's)
+    )
+  )
 )
 
 (define (time-divide num time-mapping)
@@ -185,9 +197,16 @@
 (define (mapping-division time-sent time-text)
   (if
     (= (count time-text) 1)
-    (se (first time-sent) (first time-text))
-    (se (first time-sent) (first time-text) (mapping-division (bf time-sent) (bf time-text)))
+    (se (first time-sent) (add-plural (first time-sent) (first time-text)))
+
+    (if 
+      (= (first time-sent) 0)
+      (mapping-division (bf time-sent) (bf time-text))
+      (se (first time-sent) (add-plural (first time-sent) (first time-text)) (mapping-division (bf time-sent) (bf time-text)))
+    )
   )
 )
 
-; TODO: Handle the 0 number
+(define (describe-time num)
+  (mapping-division (reverse (time-divide num time-mapping)) time-display-mapping)
+)
