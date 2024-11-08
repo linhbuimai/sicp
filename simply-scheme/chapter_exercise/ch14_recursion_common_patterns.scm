@@ -121,4 +121,151 @@
   (if (member? wd sent) (location-helper wd sent 0) #f)
 )
 
-; 14.10
+; 14.10 using combining pattern (keep and aggregate pattern)
+
+(define (adjacent-duplicates sent)
+  (cond
+    ((<= (count sent) 1) '())
+    ((equal? (first sent) (first (bf sent))) 
+      (se (first sent) (adjacent-duplicates (bf sent)))
+    )
+    (else (adjacent-duplicates (bf sent)))
+  )
+)
+
+(define (count-adjacent-duplicates sent)
+  (count (adjacent-duplicates sent))
+)
+
+; 14.11
+(define (remove-adjacent-duplicates-helper sent sentResult)
+  (cond
+    ((<= (count sent) 1) sentResult)
+    ((empty? sentResult) 
+      (remove-adjacent-duplicates-helper (bf sent) (se (first sent)))
+    )
+    ((equal? (first sent) (last sentResult))
+      (remove-adjacent-duplicates-helper (bf sent) sentResult)
+    )
+    (else
+      (remove-adjacent-duplicates-helper (bf sent) (se sentResult (first sent)))
+    )
+  )
+)
+
+(define (remove-adjacent-duplicates sent)
+  (remove-adjacent-duplicates-helper sent '())
+)
+
+; 14.12
+(define (progressive-squares? sent)
+  (cond
+    ((<= (count sent) 1) #t)
+    ((= (* (first sent) (first sent)) (first (bf sent)))
+      (progressive-squares? (bf sent))
+    )
+    (else #f)
+  )
+)
+
+; 14.13
+(define (pigl-helper wd counter)
+  (cond
+    ((= counter 0) (word wd 'ay))
+    ((member? (first wd) 'aeiou) (word wd 'ay))
+    (else
+      (pigl-helper (word (bf wd) (first wd)) (- counter 1))
+    )
+  )
+)
+
+(define (pigl wd)
+  (pigl-helper wd (count wd))
+)
+
+; 14.14
+(define (same-shape-helper sent1 sent2)
+  (cond
+    ((empty? sent1) #t)
+    ((= (count (first sent1)) (count (first sent2)))
+      (same-shape-helper (bf sent1) (bf sent2))
+    )
+    (else #f)
+  )
+)
+
+(define (same-shape? sent1 sent2)
+  (if
+    (= (count sent1) (count sent2))
+    (same-shape-helper sent1 sent2)
+    #f
+  )
+)
+
+; 14.15
+(define (merge-num-helper sent num sortSent)
+  (cond
+    ((empty? sent) (se sortSent num))
+    ((< num (first sent)) (se sortSent num sent))
+    (else
+      (merge-num-helper (bf sent) num (se sortSent (first sent)))
+    )
+  )
+)
+
+(define (merge-num sent num)
+  (cond
+    ((< num (first sent)) (se num sent))
+    ((> num (last sent)) (se sent num))
+    (else 
+      (merge-num-helper (bf sent) num (se (first sent)))
+    )
+  )
+)
+
+(merge-num '(4 7 18 40 99) 19)
+
+(define (merge sent1 sent2)
+  (cond
+    ((empty? sent1) sent2)
+    ((empty? sent2) sent1)
+    (else
+      (merge (merge-num sent1 (first sent2)) (bf sent2))
+    )
+  )
+)
+
+(merge '(4 7 18 40 99) '(19 25 30 44))
+(merge '(4 7 18 40 99) '(3 6 9 12 24 36 50))
+
+; 14.16
+
+(define (vowel? letter)
+  (member? letter 'oauei)
+)
+
+(define (syllables-helper wd counter counter-vowel)
+  (cond
+    ((empty? wd) counter-vowel)
+    ((= counter 0)
+      (if (vowel? (first wd)) 
+          (syllables-helper (bf wd) (+ counter 1) (+ counter-vowel 1))
+          (syllables-helper (bf wd) counter counter-vowel)
+      )
+    )
+    (else
+      (if (vowel? (first wd))
+          (syllables-helper (bf wd) (+ counter 1) counter-vowel)
+          (syllables-helper (bf wd) 0 counter-vowel)
+      )
+    )
+  )
+)
+
+(define (syllables wd)
+  (syllables-helper wd 0 0)
+)
+
+(syllables 'soaring)
+(syllables 'teach)
+(syllables 'teachie)
