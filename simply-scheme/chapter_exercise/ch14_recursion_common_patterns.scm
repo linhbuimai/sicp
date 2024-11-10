@@ -235,6 +235,20 @@
   )
 )
 
+; another solution
+(define (merge sent1 sent2)
+  (cond
+    ((empty? sent1) sent2)
+    ((empty? sent2) sent1)
+    ((before? (first sent1) (first sent2))
+      (se (first sent1) (merge (bf sent1) sent2))
+    )
+    (else
+      (se (first sent2) (merge sent1 (bf sent2)))
+    )
+  )
+)
+
 (merge '(4 7 18 40 99) '(19 25 30 44))
 (merge '(4 7 18 40 99) '(3 6 9 12 24 36 50))
 
