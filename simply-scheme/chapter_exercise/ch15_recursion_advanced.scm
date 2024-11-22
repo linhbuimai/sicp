@@ -52,10 +52,7 @@
     ((= (count wd) 1) (se wd))
     ((= (count wd) 2) (se (first wd) wd (last wd)))
     (else
-      (se 
-        (substrings (bf wd))
-        (prepend-every (first wd) (bl (substrings (bf wd))))
-      )
+      
     )
   )
 )
