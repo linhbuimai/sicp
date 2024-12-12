@@ -1,6 +1,12 @@
 (require (planet dyoo/simply-scheme:1:2/simply-scheme))
 
 """
+Suites:
+c = clubs (tép)
+s = spades (bích)
+h = hearts (cơ)
+d = diamonds (dô)
+
 (a)ce = 4
 (k)ing = 3
 (q)ueen = 2
